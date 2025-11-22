@@ -1,71 +1,318 @@
 ---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
 			main {
-				max-width: 800px;
+				max-width: 1000px;
+				padding: 0;
 			}
-			h1 {
+			
+			.hero {
 				text-align: center;
-				margin-bottom: 1.5em;
+				padding: 5em 2em 4em;
+				background: linear-gradient(135deg, var(--pink-pastel) 0%, var(--blue-pastel) 100%);
+				border-radius: 0 0 32px 32px;
+				margin-bottom: 4em;
 			}
-			ul {
+			
+			.hero-title {
+				font-size: 3.5em;
+				margin-bottom: 0.5em;
+				color: var(--gray-dark);
+				font-weight: 700;
+				letter-spacing: -0.04em;
+			}
+			
+			.hero-subtitle {
+				font-size: 1.3em;
+				color: var(--gray-warm);
+				max-width: 600px;
+				margin: 0 auto 2em;
+				line-height: 1.6;
+			}
+			
+			.hero-cta {
+				display: inline-block;
+				padding: 1em 2.5em;
+				background: var(--white);
+				color: var(--gray-dark);
+				border-radius: 50px;
+				text-decoration: none;
+				font-weight: 600;
+				transition: all 0.3s ease;
+				box-shadow: var(--box-shadow);
+			}
+			
+			.hero-cta:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			}
+			
+			.about-section {
+				padding: 0 2em 4em;
+				max-width: 800px;
+				margin: 0 auto;
+			}
+			
+			.about-card {
+				background: var(--white);
+				padding: 3em;
+				border-radius: 24px;
+				border: 1px solid var(--pink-pastel);
+				margin-bottom: 3em;
+			}
+			
+			.about-card h2 {
+				color: var(--gray-dark);
+				margin-bottom: 1em;
+				font-size: 2em;
+			}
+			
+			.about-card p {
+				color: var(--gray-dark);
+				line-height: 1.8;
+				margin-bottom: 1.2em;
+			}
+			
+			.themes {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 1.5em;
+				margin: 2em 0;
+			}
+			
+			.theme-card {
 				background: var(--yellow-cream);
 				padding: 2em;
 				border-radius: 16px;
-				margin: 2em 0;
+				text-align: center;
 				border: 1px solid rgba(122, 122, 122, 0.1);
+				transition: all 0.3s ease;
 			}
-			li {
-				margin-bottom: 0.75em;
-				line-height: 1.6;
+			
+			.theme-card:hover {
+				transform: translateY(-4px);
+				box-shadow: var(--box-shadow);
 			}
-			li:last-child {
-				margin-bottom: 0;
+			
+			.theme-icon {
+				font-size: 3em;
+				margin-bottom: 0.3em;
+			}
+			
+			.theme-title {
+				font-weight: 600;
+				color: var(--gray-dark);
+				font-size: 1.1em;
+			}
+			
+			.latest-posts {
+				padding: 4em 2em;
+				background: var(--blue-pastel);
+				margin-top: 4em;
+			}
+			
+			.section-title {
+				text-align: center;
+				font-size: 2.5em;
+				margin-bottom: 2em;
+				color: var(--gray-dark);
+			}
+			
+			.posts-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: 2em;
+				max-width: 1000px;
+				margin: 0 auto;
+			}
+			
+			.post-card {
+				background: var(--white);
+				border-radius: 16px;
+				overflow: hidden;
+				border: 1px solid rgba(253, 238, 244, 0.5);
+				transition: all 0.3s ease;
+				text-decoration: none;
+				display: block;
+			}
+			
+			.post-card:hover {
+				transform: translateY(-4px);
+				box-shadow: var(--box-shadow);
+				border-color: var(--pink-pastel);
+			}
+			
+			.post-card img {
+				width: 100%;
+				height: 200px;
+				object-fit: cover;
+				border-radius: 0;
+			}
+			
+			.post-content {
+				padding: 1.5em;
+			}
+			
+			.post-title {
+				font-size: 1.3em;
+				color: var(--gray-dark);
+				margin-bottom: 0.5em;
+				font-weight: 600;
+			}
+			
+			.post-date {
+				color: var(--gray-warm);
+				font-size: 0.9em;
+			}
+			
+			.view-all {
+				text-align: center;
+				margin-top: 3em;
+			}
+			
+			.view-all a {
+				display: inline-block;
+				padding: 1em 2.5em;
+				background: var(--white);
+				color: var(--gray-dark);
+				border-radius: 50px;
+				text-decoration: none;
+				font-weight: 600;
+				transition: all 0.3s ease;
+				box-shadow: var(--box-shadow);
+			}
+			
+			.view-all a:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			}
+			
+			@media (max-width: 720px) {
+				.hero {
+					padding: 3em 1.5em 2.5em;
+					margin-bottom: 2em;
+				}
+				
+				.hero-title {
+					font-size: 2.5em;
+				}
+				
+				.hero-subtitle {
+					font-size: 1.1em;
+				}
+				
+				.about-section {
+					padding: 0 1.5em 2em;
+				}
+				
+				.about-card {
+					padding: 2em;
+				}
+				
+				.themes {
+					grid-template-columns: 1fr;
+				}
+				
+				.latest-posts {
+					padding: 3em 1.5em;
+				}
+				
+				.section-title {
+					font-size: 2em;
+				}
+				
+				.posts-grid {
+					grid-template-columns: 1fr;
+					gap: 1.5em;
+				}
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+			<section class="hero">
+				<h1 class="hero-title">Duriblog</h1>
+				<p class="hero-subtitle">
+					Reflexiones sobre la vida, espiritualidad, política y religión.<br>
+					Un espacio de pensamientos y un legado para mi hijo.
+				</p>
+				<a href="/blog" class="hero-cta">Explorar reflexiones</a>
+			</section>
+
+			<section class="about-section">
+				<div class="about-card">
+					<h2>Sobre este espacio</h2>
+					<p>
+						Bienvenido a mi rincón de reflexiones personales. Este blog nace de la necesidad de compartir
+						pensamientos profundos sobre los temas que más importan: la espiritualidad, las lecciones de vida,
+						la política y la religión desde una perspectiva humana y cercana.
+					</p>
+					<p>
+						Más allá de ser un simple blog, este es un legado para mi hijo. Un lugar donde encontrará guía,
+						sabiduría compartida y las reflexiones de su padre sobre los grandes temas de la vida.
+					</p>
+					
+					<div class="themes">
+						<div class="theme-card">
+							<div class="theme-icon">🙏</div>
+							<div class="theme-title">Espiritualidad</div>
+						</div>
+						<div class="theme-card">
+							<div class="theme-icon">💭</div>
+							<div class="theme-title">Reflexiones</div>
+						</div>
+						<div class="theme-card">
+							<div class="theme-icon">🌱</div>
+							<div class="theme-title">Lecciones de vida</div>
+						</div>
+						<div class="theme-card">
+							<div class="theme-icon">❤️</div>
+							<div class="theme-title">Para mi hijo</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{posts.length > 0 && (
+				<section class="latest-posts">
+					<h2 class="section-title">Últimas reflexiones</h2>
+					<div class="posts-grid">
+						{posts.map((post) => (
+							<a href={`/blog/${post.id}/`} class="post-card">
+								{post.data.heroImage && (
+									<Image width={400} height={200} src={post.data.heroImage} alt="" />
+								)}
+								<div class="post-content">
+									<h3 class="post-title">{post.data.title}</h3>
+									<p class="post-date">
+										<FormattedDate date={post.data.pubDate} />
+									</p>
+								</div>
+							</a>
+						))}
+					</div>
+					<div class="view-all">
+						<a href="/blog">Ver todas las reflexiones</a>
+					</div>
+				</section>
+			)}
 		</main>
 		<Footer />
 	</body>
