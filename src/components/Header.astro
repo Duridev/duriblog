@@ -45,41 +45,74 @@ import HeaderLink from './HeaderLink.astro';
 <style>
 	header {
 		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		padding: 0 2em;
+		background: var(--white);
+		border-bottom: 1px solid var(--pink-pastel);
 	}
 	h2 {
 		margin: 0;
-		font-size: 1em;
+		font-size: 1.2em;
+		font-weight: 600;
 	}
 
 	h2 a,
 	h2 a.active {
 		text-decoration: none;
+		color: var(--gray-dark);
+	}
+	h2 a:hover {
+		color: var(--gray-warm);
 	}
 	nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		max-width: 1200px;
+		margin: 0 auto;
 	}
 	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
+		padding: 1.5em 1em;
+		color: var(--gray-warm);
+		border-bottom: 2px solid transparent;
 		text-decoration: none;
+		transition: all 0.2s ease;
+		font-weight: 500;
+	}
+	nav a:hover {
+		color: var(--gray-dark);
+		border-bottom-color: var(--pink-pastel);
 	}
 	nav a.active {
 		text-decoration: none;
-		border-bottom-color: var(--accent);
+		color: var(--gray-dark);
+		border-bottom-color: var(--pink-pastel);
+	}
+	.internal-links {
+		display: flex;
+		gap: 0.5em;
 	}
 	.social-links,
 	.social-links a {
 		display: flex;
+		gap: 0.75em;
+	}
+	.social-links a {
+		color: var(--gray-warm);
+		transition: color 0.2s ease;
+	}
+	.social-links a:hover {
+		color: var(--gray-dark);
 	}
 	@media (max-width: 720px) {
+		header {
+			padding: 0 1em;
+		}
 		.social-links {
 			display: none;
+		}
+		nav a {
+			padding: 1.5em 0.5em;
+			font-size: 0.95em;
 		}
 	}
 </style>

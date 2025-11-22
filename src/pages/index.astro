@@ -9,6 +9,29 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				max-width: 800px;
+			}
+			h1 {
+				text-align: center;
+				margin-bottom: 1.5em;
+			}
+			ul {
+				background: var(--yellow-cream);
+				padding: 2em;
+				border-radius: 16px;
+				margin: 2em 0;
+				border: 1px solid rgba(122, 122, 122, 0.1);
+			}
+			li {
+				margin-bottom: 0.75em;
+				line-height: 1.6;
+			}
+			li:last-child {
+				margin-bottom: 0;
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
